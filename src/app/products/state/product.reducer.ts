@@ -44,7 +44,7 @@ export default function reducer(state = initialState, action: ProductAction): IP
                 return {
                     ...state, currentProduct: null
                 };
-            case ProductActionType.ClearCurrentProduct:
+            case ProductActionType.InitializeCurrentProduct:
                 return {
                     ...state, 
                     currentProduct: {

@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import * as fromProduct from '../state/product.reducer';
 import * as fromAction from '../state/product.action'
@@ -16,10 +15,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
   errorMessage: string;
   displayCode: boolean;
   products: Product[];
-
   // Used to highlight the selected product in the list
   selectedProduct: Product | null;
-  sub: Subscription;
 
   constructor(
     private store: Store<fromProduct.IState>,
@@ -27,8 +24,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit(): void {
-    this.sub = this.productService.selectedProductChanges$.subscribe(
-      selectedProduct => this.selectedProduct = selectedProduct
+    this.store.pipe(select(fromProduct.getCurrentProduct)).subscribe(
+      p => this.selectedProduct = p
     );
 
     this.productService.getProducts().subscribe({
@@ -37,12 +34,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
 
     this.store.pipe(select(fromProduct.getShowProductCode)).subscribe(
-      showProductCode => this.displayCode = showProductCode
+      p => this.displayCode = p
     );
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
   }
 
   checkChanged(value: boolean): void {
@@ -50,10 +46,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   newProduct(): void {
-    this.productService.changeSelectedProduct(this.productService.newProduct());
+    this.store.dispatch(new fromAction.InitializeCurrentProduct());
   }
 
   productSelected(product: Product): void {
-    this.productService.changeSelectedProduct(product);
+    this.store.dispatch(new fromAction.SetCurrentProduct(product));
   }
 }
