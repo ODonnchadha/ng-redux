@@ -98,3 +98,15 @@
         - Leverage the feature selector to obtain different state selectors.
 
 - Building Action Creators in order to strongly-type Actions.
+    - Three steps:
+    1. Define the action types.
+        - e.g.: Use an enum to specify the set of named constants.
+        - e.g.: Specify clear action type strings.       
+    2. Build an action creator.
+        - e.g.: Define a class with type and payload properties.
+        - e.g.: Use the action creator when dispatching the action.
+    3. Union the action creators.
+        - e.g.: Define a union type of all.
+        - e.g.: Use this union type in the reducer.
+    4. For more complex operations:
+        - Define multiple actions.
