@@ -110,3 +110,20 @@
         - e.g.: Use this union type in the reducer.
     4. For more complex operations:
         - Define multiple actions.
+
+- Asynchronous with effects.
+    1. NgRx Effects Library: Manages side effects to keep components pure.
+        - And do no manage side effects within reducers, either. Reducers are pure functions.
+        - Effects take an action, perform some work, and then dispatch a new action.
+    2. Bennefits of Effects:
+        - Keep components pure.
+        - Isolate side effects.
+        - Easier to test (in isolation from the components that use them.)
+    3. Defining effects:
+        - A type of Angular service. (With @Injectable decorator.)
+        - Inject an actions$ observeable.
+        - Decorate a function with the @Effect() decorator.
+        - NOTE: e.g.: loadProducts$ "This variable is an observeable."
+    ```javascript
+        npm install @ngrx/effects
+    ```

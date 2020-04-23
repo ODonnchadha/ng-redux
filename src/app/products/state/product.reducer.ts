@@ -55,6 +55,10 @@ export default function reducer(state = initialState, action: ProductAction): IP
                         starRating: 0
                     }
                 };
+            case ProductActionType.LoadSuccess:
+                return {
+                    ...state, products: action.payload
+                }
         default:
             return state;
     }
