@@ -9,7 +9,7 @@ export interface IState extends fromRoot.IState {
 
 export interface IProductState {
     showProductCode: boolean,
-    currentProduct: Product,
+    currentProductId: number | null,
     products: Product[],
     error: string
 }
@@ -21,9 +21,27 @@ export const getShowProductCode = createSelector(
     state => state.showProductCode
 )
 
-export const getCurrentProduct = createSelector(
+export const getCurrentProductId = createSelector(
     getProductFeatureState, 
-    state => state.currentProduct
+    state => state.currentProductId
+)
+
+export const getCurrentProduct = createSelector(
+    getProductFeatureState,
+    getCurrentProductId,
+    (state, currentProductId) => {
+        if (currentProductId === 0) {
+            return {
+                id: 0,
+                productName: '',
+                productCode: 'New',
+                description: '',
+                starRating: 0
+            };
+        } else {
+            return currentProductId ? state.products.find(p => p.id === currentProductId) : null;
+        }
+    }
 )
 
 export const getProducts = createSelector(
@@ -44,22 +62,15 @@ export default function reducer(state = initialState, action: ProductAction): IP
             };
         case ProductActionType.SetCurrentProduct:
             return {
-                ...state, currentProduct: { ...action.payload }
+                ...state, currentProductId: action.payload.id
             };
             case ProductActionType.ClearCurrentProduct:
                 return {
-                    ...state, currentProduct: null
+                    ...state, currentProductId: null
                 };
             case ProductActionType.InitializeCurrentProduct:
                 return {
-                    ...state, 
-                    currentProduct: {
-                        id: 0,
-                        productName: '',
-                        productCode: 'New',
-                        description: '',
-                        starRating: 0
-                    }
+                    ...state, currentProductId: 0
                 };
             case ProductActionType.LoadSuccess:
                 return {
@@ -69,6 +80,16 @@ export default function reducer(state = initialState, action: ProductAction): IP
                 return {
                     ... state, products: [], error: action.payload
                 };
+            case ProductActionType.UpdateProductSuccess:
+                const id = action.payload.id;
+                const update = state.products.map(p => id === p.id ? action.payload : p);
+                return {
+                    ...state, products: update, currentProductId: id, error: ''
+                }
+            case ProductActionType.UpdateProductFail:
+                return {
+                    ... state, error: action.payload
+                };
         default:
             return state;
     }
@@ -76,7 +97,7 @@ export default function reducer(state = initialState, action: ProductAction): IP
 
 const initialState: IProductState = {
     showProductCode: false,
-    currentProduct: null,
+    currentProductId: null,
     products: [],
     error: ''
 }
