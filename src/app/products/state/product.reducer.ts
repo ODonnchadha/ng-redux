@@ -80,6 +80,16 @@ export default function reducer(state = initialState, action: ProductAction): IP
                 return {
                     ... state, products: [], error: action.payload
                 };
+            case ProductActionType.UpdateProductSuccess:
+                const id = action.payload.id;
+                const update = state.products.map(p => id === p.id ? action.payload : p);
+                return {
+                    ...state, products: update, currentProductId: id, error: ''
+                }
+            case ProductActionType.UpdateProductFail:
+                return {
+                    ... state, error: action.payload
+                };
         default:
             return state;
     }

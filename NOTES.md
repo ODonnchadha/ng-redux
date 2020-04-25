@@ -183,3 +183,12 @@
     4. Dispatch an action.
     5. Build the effect to process the action:
     6. Process the success and failure operations:
+    - Mutable/immutable game:
+        - Mutable: state.products.push(action.payload)
+        - Immutable: state.products.concat(action.payload)
+        - Immutable: [...state.products, action.payload]
+        - Mutable: state.products.shift()
+        - Mutable: state.products.splice(0,2)
+        - Immutable: state.products.filter(p => p.id !== action.payload.id)
+        - Immutable: state.products.map(p => p.id === action.payload.id ? action.payload : p)
+        - Mutable: state.products.forEach(p => p.id === action.payload.id ? action.payload : p)
