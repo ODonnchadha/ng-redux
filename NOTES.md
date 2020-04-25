@@ -127,3 +127,29 @@
     ```javascript
         npm install @ngrx/effects
     ```
+    4. switchMap: 
+        - Cancels the current (in flight) subscription/request and can cause a race condition.
+        - Use for GET requests or cancellable requests like searches.
+    5. concatMap:
+        - Runs subscriptions/requests in order and is less performant. But safe.
+        - Use for GET, POST, and PUT requests when order is important.
+    5. mergeMap:
+        - Runs subscriptions/requests in parallel.
+        - Use for PUT, POST, and DELETE methods when order is not important.
+    6. exhaustMap:
+        - Ignores all subsequent subscriptions/requests until it completes.
+        - Use for login when you do not want more requests until the initial request is complete.
+    7. Registering an effect.
+    ```typescript
+        @NgModule({
+            imports: [
+                EffectsModule.forRoot([])
+            ]
+        })
+        @NgModule({
+            imports: [
+                EffectsModule.forFeature([Effects])
+            ]
+        })
+    ```
+
