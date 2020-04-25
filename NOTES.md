@@ -174,3 +174,12 @@
     ```
     2. When should you use the Asunc pipe versus subscribing in the component class?
         - When you need the observeables value within the class go ahead and subscribe.
+
+- Performing update operations:
+    - Select a product. Update. Save. View the new product. Current product becomes an 'id.'
+    1. Identify the state and actions:
+    2. Strongly type the state and build selectors:
+    3. Strongly type the actions with creators:
+    4. Dispatch an action.
+    5. Build the effect to process the action:
+    6. Process the success and failure operations:
