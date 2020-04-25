@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 export class ProductListComponent implements OnInit, OnDestroy {
   active: boolean = true;
   products$: Observable<Product[]>;
+  error$: Observable<string>;
 
   pageTitle = 'Products';
   errorMessage: string;
@@ -25,11 +26,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(new fromAction.Load());
+    this.error$ = this.store.pipe(select(fromProduct.getError));
     this.products$ = this.store.pipe(select(fromProduct.getProducts));
-    // this.store.pipe(select(fromProduct.getProducts), takeWhile(()=> this.active))
-    //   .subscribe((products: Product[]) => this.products = products);
-
+    this.store.dispatch(new fromAction.Load());
+    
     this.store.pipe(select(fromProduct.getCurrentProduct), takeWhile(()=> this.active))
       .subscribe(p => this.selectedProduct = p);
 
