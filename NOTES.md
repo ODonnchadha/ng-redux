@@ -3,7 +3,7 @@
 - GitHub:       https://github.com/DeborahK/Angular-NgRx-GettingStarted
 - Quick Fix:    https://stackoverflow.com/questions/60174503/job-name-getprojectmetadata-does-not-exist
 
-``javascript
+```javascript
     npm install @ngrx/store
 ```
 
@@ -64,7 +64,7 @@
 - Install the Redux Store Dev Tools:
     1. Install browser Redux DevTools extension.
     2. Install @ngrx/sotre-devtools. Initialize within a given module.
-    ``javascript
+    ```javascript
         npm install @ngrx/store-devtools
     ```
 
