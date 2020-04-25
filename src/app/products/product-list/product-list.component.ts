@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Store, select, } from '@ngrx/store';
 import * as fromProduct from '../state/product.reducer';
 import * as fromAction from '../state/product.action'
 import { Product } from '../product';
-import { ProductService } from '../product.service';
+import { takeWhile } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'pm-product-list',
@@ -11,34 +12,33 @@ import { ProductService } from '../product.service';
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit, OnDestroy {
+  active: boolean = true;
+  products$: Observable<Product[]>;
+  error$: Observable<string>;
+
   pageTitle = 'Products';
   errorMessage: string;
   displayCode: boolean;
   products: Product[];
-  // Used to highlight the selected product in the list
   selectedProduct: Product | null;
 
-  constructor(
-    private store: Store<fromProduct.IState>,
-    private productService: ProductService) { 
-    }
+  constructor(private store: Store<fromProduct.IState>) { 
+  }
 
   ngOnInit(): void {
-    this.store.pipe(select(fromProduct.getCurrentProduct)).subscribe(
-      p => this.selectedProduct = p
-    );
+    this.error$ = this.store.pipe(select(fromProduct.getError));
+    this.products$ = this.store.pipe(select(fromProduct.getProducts));
+    this.store.dispatch(new fromAction.Load());
+    
+    this.store.pipe(select(fromProduct.getCurrentProduct), takeWhile(()=> this.active))
+      .subscribe(p => this.selectedProduct = p);
 
-    this.productService.getProducts().subscribe({
-      next: (products: Product[]) => this.products = products,
-      error: (err: any) => this.errorMessage = err.error
-    });
-
-    this.store.pipe(select(fromProduct.getShowProductCode)).subscribe(
-      p => this.displayCode = p
-    );
+    this.store.pipe(select(fromProduct.getShowProductCode), takeWhile(()=> this.active))
+      .subscribe(p => this.displayCode = p);
   }
 
   ngOnDestroy(): void {
+    this.active = false;
   }
 
   checkChanged(value: boolean): void {

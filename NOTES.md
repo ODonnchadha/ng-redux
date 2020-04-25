@@ -80,7 +80,7 @@
     1. Two types of Selectors:
         - createFeatureSelector:
         - createSelector: (Composing selectors.)
-    ```typescript
+    ```javascript
         export const getCurrentProduct = createSelector(
             getProductFeatureState,
             getCurrentProductId,
@@ -110,3 +110,67 @@
         - e.g.: Use this union type in the reducer.
     4. For more complex operations:
         - Define multiple actions.
+
+- Asynchronous with effects.
+    1. NgRx Effects Library: Manages side effects to keep components pure.
+        - And do no manage side effects within reducers, either. Reducers are pure functions.
+        - Effects take an action, perform some work, and then dispatch a new action.
+    2. Bennefits of Effects:
+        - Keep components pure.
+        - Isolate side effects.
+        - Easier to test (in isolation from the components that use them.)
+    3. Defining effects:
+        - A type of Angular service. (With @Injectable decorator.)
+        - Inject an actions$ observeable.
+        - Decorate a function with the @Effect() decorator.
+        - NOTE: e.g.: loadProducts$ "This variable is an observeable."
+    ```javascript
+        npm install @ngrx/effects
+    ```
+    4. switchMap: 
+        - Cancels the current (in flight) subscription/request and can cause a race condition.
+        - Use for GET requests or cancellable requests like searches.
+    5. concatMap:
+        - Runs subscriptions/requests in order and is less performant. But safe.
+        - Use for GET, POST, and PUT requests when order is important.
+    5. mergeMap:
+        - Runs subscriptions/requests in parallel.
+        - Use for PUT, POST, and DELETE methods when order is not important.
+    6. exhaustMap:
+        - Ignores all subsequent subscriptions/requests until it completes.
+        - Use for login when you do not want more requests until the initial request is complete.
+    7. Registering an effect. Nothng on the bootstrap. Lazy-load with custom module.
+    ```javascript
+        @NgModule({
+            imports: [
+                EffectsModule.forRoot([])
+            ]
+        })
+        @NgModule({
+            imports: [
+                EffectsModule.forFeature([Effects])
+            ]
+        })
+    ```
+    8. Using Effects:
+        - Inject the store:
+        - Call the dispatch method:
+        - Select state with selector
+        ```javascript
+            constructor(private store: Store<fromProducts.State>)
+            this.store.dispatch(new productAction.Load());
+            this.store.pipe(select(fromProduct.getProducts)).subscribe(
+                products: Products[]) => this.products = products
+            );
+        ```
+- Unsubscribing from the store:
+    ```javascript
+        takeWhile(()=> this.active))
+    ```
+    1. Or, use the Async Pipe as it subscribes and unsubscribes for you.
+    ```javascript
+        this.products$ = this.store.pipe(select(fromProduct.getProducts));
+        *ngFor="let product of products$ | async"
+    ```
+    2. When should you use the Asunc pipe versus subscribing in the component class?
+        - When you need the observeables value within the class go ahead and subscribe.
