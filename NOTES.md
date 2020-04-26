@@ -205,3 +205,31 @@
         - "Containers" versus "Components."
     - Change Detection Strategy using OnPush:
     - Adding an index.ts file to our state folder.
+
+- ChangeDetectionStrategy.OnPush
+    - OnPush means that the change dector's mode will initially be set to CheckOnce.
+    ```javascript
+        import { ChangeDetectionStretegy } from '@angular/core';
+        @Component({
+            changeDetection: ChangeDetectionStretegy.OnPush
+        })
+    ```
+
+- Barrel:
+    - A way to roll-up exports from several modules into a single convience module. The barrel itself is a module file that re-exports selected exports of other modules.
+    - Named index.ts as a convention. 
+    - Used as a 'glorified' API for the given state folder.
+    1. Public API for state.
+    2. Seperation of concerns.
+    3. Cleaner code.
+
+- ChangeDetection:
+    - Remember to add 'ChangeDetectionStrategy.OnPush' to all container component decorators.
+    - Skip change detection unless an @Input() receives a new value of object reference.
+
+- Final words:
+    1. Additional NgRx libraries:
+        - @ngrx/entity: Assists with CRUD operations. Helps manage collections.
+        - @ngrx/schematics: CLI with code generation. Can generate NgRx code using the Angular CLI.
+        - @ngrx/router-store: Connects router to store.
+        - @ngrx-data: Abstracts away NgRx entities. Configuration & convention. No code.
