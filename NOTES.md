@@ -192,3 +192,16 @@
         - Immutable: state.products.filter(p => p.id !== action.payload.id)
         - Immutable: state.products.map(p => p.id === action.payload.id ? action.payload : p)
         - Mutable: state.products.forEach(p => p.id === action.payload.id ? action.payload : p)
+
+- Architectural Considerations:
+    1. Folder Structure:
+        - Folders by feature or by function?
+        - Feature: We follow the Angular style guide. Easier to find files. Less cluttered.
+    2. Presentational and Container Components:
+        - This is more a mindset. 
+        - How things look versus how things work.
+        - Stateful versus stateless. 
+        - OnPush is skipped with presentational components, thus performance is gained.
+        - "Containers" versus "Components."
+    - Change Detection Strategy using OnPush:
+    - Adding an index.ts file to our state folder.
